@@ -4,35 +4,21 @@ import os
 
 # Define the command output capturing function for Zsh
 ZSH_CAPTURE_OUTPUT_FUNC = r"""
-export LAST_CMD_OUTPUT_FILE="/tmp/last_cmd_output"
-
-function capture_command_output() {
-  if [[ -n $LAST_COMMAND ]]; then
-    eval "$LAST_COMMAND" > >(tee >(cat > "$LAST_CMD_OUTPUT_FILE")) 2> >(tee >(cat 1>&2) > "$LAST_CMD_OUTPUT_FILE" 1>&2)
-    unset LAST_COMMAND
-  fi
-}
-
+export LAST_CMD_FILE="/tmp/last_cmd"
 function set_last_command() {
-  LAST_COMMAND=$(fc -ln -1)
+  echo "$(fc -ln -1)" > "$LAST_CMD_FILE"
 }
-
 autoload -Uz add-zsh-hook
-add-zsh-hook precmd capture_command_output
 add-zsh-hook preexec set_last_command
 """
 
 # Define the command output capturing function for Bash
 BASH_CAPTURE_OUTPUT_FUNC = r"""
-export LAST_CMD_OUTPUT_FILE="/tmp/last_cmd_output"
-
-function capture_command_output() {
-  history -a
-  local last_command=$(tail -n 1 $HISTFILE)
-  eval "$last_command" > >(tee >(cat > "$LAST_CMD_OUTPUT_FILE")) 2> >(tee >(cat 1>&2) > "$LAST_CMD_OUTPUT_FILE" 1>&2)
+export LAST_CMD_FILE="/tmp/last_cmd"
+function set_last_command() {
+  echo "$(tail -n 1 $HISTFILE)" > "$LAST_CMD_FILE"
 }
-
-PROMPT_COMMAND="capture_command_output"
+PROMPT_COMMAND="set_last_command;${PROMPT_COMMAND}"
 """
 
 class Shell(Enum):
