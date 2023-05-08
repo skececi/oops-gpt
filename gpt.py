@@ -14,6 +14,8 @@ output in the following format. DO NOT include any headers of prefacing text, ge
 2. `second command` : summary of SECOND OPTION
 3.  `third command` : summary of THIRD OPTION
 
+Always surround the actual command in backticks (`). Always separate the command from the description with a colon (:).
+
 always refer to the output as "the previous command". i need to be able to parse this into code so follow the instructions precisely. 
 the three commands must be able to be executed right away without any additional input from the user. avoid commands with placeholders.
 if you must use a placeholder (avoid at all costs!), it must be between angle brackets <placeholder>. MAKE SURE Each placeholder is a unique string.
@@ -22,10 +24,19 @@ However, AVOID PLACEHOLDERS AT ALL COSTS. DO NOT USE PLACEHOLDERS.
 Here is the output of the previous command:
 """
 
+def truncate_from_beginning(input_string, max_length=4000, keep_start=500):
+    if len(input_string) > max_length:
+        start_part = input_string[:keep_start]
+        end_part = input_string[-(max_length - keep_start):]
+        return start_part + end_part
+    return input_string
+
 
 def send_output_to_llm(output: str):
     print("Sending output to LLM...")
     prompt = PROMPT_PREPEND + output
+    # truncate the prompt to 3000 words.
+    prompt = truncate_from_beginning(prompt)
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
     )
