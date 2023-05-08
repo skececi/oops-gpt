@@ -4,7 +4,7 @@ Analyze your previous terminal output and gives you helpful suggestions. Uses LL
 TODOs
 - [ ] More helpful prompting around OPENAI_API_KEY
 - [ ] Properly install and run first_time_setup without manual intervention
-- [ ] 
+- [ ] Package and distribute
 
 - [ ] Support other shells
 - [ ] Support Windows (Powershell, Cmd.exe)
