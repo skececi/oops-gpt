@@ -29,8 +29,5 @@ def send_output_to_llm(output: str):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
     )
-    print("LLM response: ")
-    print(completion)
-    print(completion["choices"][0]["message"]["content"].split("\n"))
     return completion["choices"][0]["message"]["content"]
 

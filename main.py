@@ -17,7 +17,6 @@ def get_last_command():
     # Read the last command from the file
     with open(LAST_CMD_OUTPUT_FILE, "r") as file:
         last_command = file.read().strip()
-        print("Last command: " + last_command)
         return last_command
 
 
@@ -40,8 +39,7 @@ def run_last_command_and_get_output() -> str:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    print("OUTPUT: ")
-    print(output)
+
     return output
 
 def extract_placeholders(input_string):
@@ -57,7 +55,7 @@ def prompt_and_substitute(input_string, placeholders):
     user_inputs = {}
     # Prompt the user for input for each placeholder
     for placeholder in placeholders:
-        user_input = input(f"Enter value for {placeholder}: ")
+        user_input = input(f"Enter value for <{placeholder}>: ")
         user_inputs[placeholder] = user_input
     # Substitute the user's input back into the original string
     for placeholder, user_input in user_inputs.items():
@@ -73,15 +71,12 @@ def parse_response(llm_response: str):
     commands_with_descriptors = []
     for suggested_command in suggested_commands:
         try:
-            print(suggested_command)
             command = suggested_command.split(":")[0].split("`")[1]
-            print("command " + command)
             command_descriptor = suggested_command.split(":")[1]
-            print("command_descriptor" + command_descriptor)
             commands_with_descriptors.append(suggested_command)
         except:
-            print("Error parsing command: " + suggested_command)
-            
+            pass
+                        
     return (summary, commands_with_descriptors)
 
 
@@ -93,34 +88,36 @@ def get_user_selection(commands_with_descriptors):
     questions = [
         inquirer.List(
             'selected_command',
-            message='Select a command to run (ctrl+C to cancel):',
+            message='Select a command to run (ctrl+C to cancel)',
             choices=commands_with_descriptors,
         ),
     ]
 
     # Prompt the user and get the selected command
-    answers = inquirer.prompt(questions)
-    if answers is None:
-        print("No command selected. Exiting.")
-        sys.exit(1)
+    try:
+        answers = inquirer.prompt(questions)
+        if answers is None:
+            print("No command selected. Exiting.")
+            sys.exit(1)
 
-    selected_command_with_descriptor = answers['selected_command']
+        selected_command_with_descriptor = answers['selected_command']
 
-    # get the command itself
-    selected_command = selected_command_with_descriptor.split("`")[1]
-    print("Selected command: " + selected_command)
+        # get the command itself
+        selected_command = selected_command_with_descriptor.split("`")[1]
 
-    placeholders = extract_placeholders(selected_command)
-    # if placeholders is not empty
-    if placeholders:
-        substituted_string = prompt_and_substitute(selected_command, placeholders)
-    else:
-        substituted_string = selected_command
+        placeholders = extract_placeholders(selected_command)
+        # if placeholders is not empty
+        if placeholders:
+            substituted_string = prompt_and_substitute(selected_command, placeholders)
+        else:
+            substituted_string = selected_command
 
-    print(f'Running command: {substituted_string}')
+        print(f'Running command: {substituted_string}')
 
-    # run the command in the current shell
-    os.system(substituted_string)
+        # run the command in the current shell
+        os.system(substituted_string)
+    except KeyboardInterrupt:
+        print("Exiting.")
 
 
 def fix_command():
@@ -130,7 +127,6 @@ def fix_command():
 
     llm_response = send_output_to_llm(output_str)
     summary, commands_with_descriptors = parse_response(llm_response)
-    print(llm_response)
     print("Summary of last command: " + summary)
     print("\n")
     get_user_selection(commands_with_descriptors)
