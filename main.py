@@ -75,7 +75,7 @@ def parse_response(llm_response: str):
             command_descriptor = suggested_command.split(":")[1]
             commands_with_descriptors.append(suggested_command)
         except:
-            pass
+            print("Error parsing command: " + suggested_command)
                         
     return (summary, commands_with_descriptors)
 
