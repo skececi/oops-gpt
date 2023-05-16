@@ -1,5 +1,5 @@
 # oops-ai
-Analyze your previous terminal output and gives you helpful suggestions. Uses LLMs to read over the output of your previous command, summarize what happened, and suggest helpful follow ups.
+Analyze your previous terminal output with a LLM to suggest follow up commands, summarize output, fix errors, and more.
 
 TODOs
 - [ ] More helpful prompting around OPENAI_API_KEY
