@@ -1,5 +1,5 @@
 # oops
-Analyze your previous terminal output with a LLM to suggest follow up commands, summarize output, fix errors, and more.
+Analyze your previous terminal output with GPT to suggest follow up commands, summarize output, fix errors, and more.
 
 TODOs
 - [ ] More helpful prompting around OPENAI_API_KEY
