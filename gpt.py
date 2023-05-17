@@ -1,9 +1,9 @@
 import os
 import openai
 
-# Load your API key from an environment variable or secret management service
-openai.api_key = os.getenv("OPENAI_API_KEY")
+from config import Config
 
+config = Config()
 
 PROMPT_PREPEND = r"""
 you are a helpful CLI tool suggesting followup commands to run next. the following is the output of the process that just ran. tell me what happened in the output, and suggest 3 options for commands that could be run directly after this one (and a short comment - no longer than 25 words - on what each of your suggested commands will do).
@@ -24,7 +24,10 @@ However, AVOID PLACEHOLDERS AT ALL COSTS. DO NOT USE PLACEHOLDERS.
 Here is the output of the previous command:
 """
 
+
 def truncate_from_beginning(input_string, max_length=4000, keep_start=500):
+    """Truncate a string from the beginning, keeping the first n characters."""
+
     if len(input_string) > max_length:
         start_part = input_string[:keep_start]
         end_part = input_string[-(max_length - keep_start):]
@@ -37,8 +40,18 @@ def send_output_to_llm(output: str):
     prompt = PROMPT_PREPEND + output
     # truncate the prompt to 3000 words.
     prompt = truncate_from_beginning(prompt)
-    completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
-    )
-    return completion["choices"][0]["message"]["content"]
+    try:
+        completion = openai.ChatCompletion.create(
+            model=config.model, 
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return completion["choices"][0]["message"]["content"]
+    except openai.error.AuthenticationError:
+        print("Authentication error. Check your OpenAI API key in the .env file")
+        exit()
+    # except all other openai errors
+    except openai.error.OpenAIError as e:
+        # print the error message'
+        print(e)
+        exit()
 

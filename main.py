@@ -7,8 +7,9 @@ import re
 
 import inquirer
 
-from first_time_setup import write_to_config_file
 from gpt import send_output_to_llm
+
+
 
 LAST_CMD_OUTPUT_FILE = "/tmp/last_cmd"
 
@@ -75,7 +76,7 @@ def parse_response(llm_response: str):
             command_descriptor = suggested_command.split(":")[1]
             commands_with_descriptors.append(suggested_command)
         except:
-            print("Error parsing command: " + suggested_command)
+            pass
                         
     return (summary, commands_with_descriptors)
 
@@ -133,10 +134,9 @@ def fix_command():
 
 
 def entrypoint():
-    print("Hit main. Fixing your command...")
+    print("Hit main.entrypoint(), Fixing your command...")
     fix_command()
 
 
 if __name__ == "__main__":
-    # write_to_config_file()
     entrypoint()

@@ -12,7 +12,7 @@ class PostInstallCommand(install):
 setup(
     name='oops-ai',
     version='0.0.1',
-    description='My cool Python script',
+    description='Analyzes your previous terminal output with a LLM to suggest follow up commands, summarize output, fix errors, and more.',
     author='Sam Kececi',
     author_email='sam.kececi@gmail.com',
     url='http://github.com/skececi/oops-ai',
