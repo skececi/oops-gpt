@@ -4,8 +4,8 @@ Analyze your previous terminal output with GPT to suggest follow up commands, su
 To begin
 
 TODOs
-- [ ] More helpful prompting around OPENAI_API_KEY
-- [ ] Properly install and run first_time_setup without manual intervention
+- [x] More helpful prompting around OPENAI_API_KEY
+- [x] Properly install and run first_time_setup without manual intervention
 - [ ] Package and distribute
 
 - [ ] Support other shells
