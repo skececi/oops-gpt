@@ -1,6 +1,9 @@
 from setuptools import setup
 from setuptools.command.install import install
 
+with open("requirements.txt") as f:
+    requirements = f.read().splitlines()
+
 class PostInstallCommand(install):
     """Post-installation for installation mode."""
     def run(self):
@@ -16,13 +19,15 @@ setup(
     author='Sam Kececi',
     author_email='sam.kececi@gmail.com',
     url='http://github.com/skececi/oops-ai',
+    py_modules=['config', 'first_time_setup', 'main', 'gpt'],
     scripts=['main.py'],
+    install_requires=requirements,
     cmdclass={
         'install': PostInstallCommand,
     },
     entry_points={
         'console_scripts': [
-            'oops = main:main',  # this means when `oops` is typed in the command line, the `main` function of `main.py` will be called
+            'oops = main:main', 
         ],
     },
 )
