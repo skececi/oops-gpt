@@ -133,10 +133,10 @@ def fix_command():
     get_user_selection(commands_with_descriptors)
 
 
-def entrypoint():
+def main():
     print("Hit main.entrypoint(), Fixing your command...")
     fix_command()
 
 
 if __name__ == "__main__":
-    entrypoint()
+    main()
